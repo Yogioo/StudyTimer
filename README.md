@@ -24,7 +24,7 @@
 ## 快速开始 (推荐给普通用户)
 
 1.  前往本项目的 [**Releases**](https://github.com/Yogioo/StudyTimer/releases) 页面。
-2.  下载最新的 `Study.Timer.vx.x.x.zip` 压缩包。
+2.  下载最新的 `study_timer_Vx.x.7z` 压缩包。
 3.  解压后，双击运行 `study_timer_gui.exe` 即可！
 
 ## 使用指南
