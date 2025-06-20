@@ -23,7 +23,7 @@
 
 ## 快速开始 (推荐给普通用户)
 
-1.  前往本项目的 [**Releases**](https://github.com/YOUR_USERNAME/YOUR_REPO/releases) 页面。
+1.  前往本项目的 [**Releases**](https://github.com/Yogioo/StudyTimer/releases) 页面。
 2.  下载最新的 `Study.Timer.vx.x.x.zip` 压缩包。
 3.  解压后，双击运行 `study_timer_gui.exe` 即可！
 
@@ -110,7 +110,7 @@ pip install pyinstaller
 
 ## 许可 (License)
 
-本项目采用 [MIT License](LICENSE)。
+本项目采用 [MIT License](./LICENSE)。
 
 ## 致谢 (Acknowledgements)
 
