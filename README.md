@@ -1,6 +1,6 @@
 # 沉浸式学习计时器 (Immersive Study Timer)
 
-[此处放置程序截图或GIF, 例如: ![screenshot](./document/anim.gif)]
+![screenshot](./document/anim.gif)]
 
 一款专为对抗“计时器焦虑”而设计的桌面学习伴侣。它通过随机学习时长与自动长短休息机制，帮助你进入心流状态，让每一次专注都充满未知感和成就感。
 
