@@ -157,7 +157,7 @@ class StudyTimerLogic(QObject):
     def __init__(self, config):
         super().__init__()
         self.config = config
-        self.logger = StudyLogger() # <--- NEW: 初始化日志记录器
+        self.logger = StudyLogger()
 
         self.is_paused = False
         self.time_remaining_on_pause = 0
@@ -169,6 +169,9 @@ class StudyTimerLogic(QObject):
         self.sound_paths = self._validate_and_get_sound_paths()
         
         self.total_study_time = self.config.get("total_study_time", 0)
+
+        # 用于触发长休息的当前周期学习时长
+        self.current_cycle_study_time = 0
 
         # --- NEW: 用于追踪单个学习会话的 "临时记事本" ---
         self.current_session_start_time = None
@@ -186,7 +189,8 @@ class StudyTimerLogic(QObject):
         self.cycle_count = 0
         self.current_state = "stopped"
         self.is_paused = False
-        self._clear_current_session() # <--- NEW: 放弃未完成的会话
+        self._clear_current_session()
+        self.current_cycle_study_time = 0 # 修改: 重置周期时，必须清零周期计时
         self.state_changed.emit("沉浸式学习\n右键单击开始", self.current_state)
         self.time_updated.emit(self.total_study_time)
 
@@ -198,7 +202,7 @@ class StudyTimerLogic(QObject):
 
     def on_timer_timeout(self):
         if self.current_state == "studying":
-            # --- 这是关键的 "存档时刻" ---
+            # --- 记录日志 ---
             if self.current_session_start_time and self.current_session_duration > 0:
                 end_time = datetime.now()
                 self.logger.log_session(
@@ -206,14 +210,15 @@ class StudyTimerLogic(QObject):
                     end_time=end_time,
                     net_duration_seconds=self.current_session_duration
                 )
-            self._clear_current_session() # <--- NEW: 记录完成后清空
+            self._clear_current_session() #  记录完成后清空
 
             study_duration = self.timer.property("duration")
-            self.total_study_time += study_duration
+            self.total_study_time += study_duration # 更新永久总时长
+            self.current_cycle_study_time += study_duration # 更新当前周期时长
             self._run_short_break_cycle()
 
         elif self.current_state == "short_breaking":
-            if self.total_study_time >= self.config["long_break_threshold"]:
+            if self.current_cycle_study_time >= self.config["long_break_threshold"]:
                 self._run_long_break_cycle()
             else:
                 self._run_study_cycle()
@@ -266,7 +271,7 @@ class StudyTimerLogic(QObject):
         elif self.current_state in ["stopped", "long_break_finished"]:
             self.is_paused = False
             if self.current_state == "long_break_finished": self.reset_cycle()
-            if self.total_study_time >= self.config["long_break_threshold"]:
+            if self.current_cycle_study_time >= self.config["long_break_threshold"]:
                 self._run_long_break_cycle()
             else:
                 self._run_study_cycle()
@@ -286,6 +291,9 @@ class StudyTimerLogic(QObject):
         self.state_changed.emit("🧘 长时间休息...", self.current_state)
         self.time_updated.emit(self.total_study_time)
         self._play_sound("start_long_break")
+        # 一旦开始长休息，就清零周期计时器
+        # 这样，长休息结束后，下一个周期会从0开始计算
+        self.current_cycle_study_time = 0
         self.timer.setProperty("duration", 0)
         self.timer.start(break_duration * 1000)
     
