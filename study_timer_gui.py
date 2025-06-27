@@ -308,6 +308,8 @@ class StudyTimerLogic(QObject):
         if self.is_paused:
             self.timer.start(self.time_remaining_on_pause)
             self.is_paused = False
+            # 添加音效播放 - 暂停后继续学习时播放
+            self._play_sound("start_study")
             original_state_text = {
                 "studying": f"📚 学习中...\n(第 {self.cycle_count} 轮)",
                 "short_breaking": "☕ 短暂休息中...",
