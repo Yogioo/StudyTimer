@@ -550,7 +550,7 @@ class StudyTimerGUI(QWidget):
         always_on_top_action = QAction(always_on_top_text, self); always_on_top_action.triggered.connect(self.toggle_always_on_top)
 
         opacity_menu = QMenu("💧 透明度", self)
-        for val in [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4,0.3,0.2,0.1,0.0]:
+        for val in [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4,0.3,0.2,0.1,0.01]:
             op_action = QAction(f"{int(val*100)}%", self); op_action.triggered.connect(lambda _, v=val: self.set_opacity(v))
             opacity_menu.addAction(op_action)
             
