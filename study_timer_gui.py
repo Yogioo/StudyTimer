@@ -405,11 +405,10 @@ class StudyTimerGUI(QWidget):
         self.countdown_timer.setInterval(1000)
         self.countdown_timer.timeout.connect(self.update_countdown_display)
 
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint |
-            Qt.WindowType.Tool |
-            Qt.WindowType.WindowStaysOnTopHint if self.is_always_on_top else Qt.WindowType.Widget
-        )
+        base_flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.Tool
+        if self.is_always_on_top:
+            base_flags |= Qt.WindowType.WindowStaysOnTopHint
+        self.setWindowFlags(base_flags)
         
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
